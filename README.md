@@ -5,3 +5,4 @@
 - 빅데이터 분산 처리를 위한 에코 시스템을 구축한다.
 - 데이터의 수집, 전처리, 적재 과정을 수행한다.
 - 결과 보고서 distributed.md
+- [Notion link](https://www.notion.so/547a8f73d5e44efaaada77427d2a77f2)
