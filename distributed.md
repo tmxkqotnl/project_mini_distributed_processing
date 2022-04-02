@@ -8,7 +8,7 @@
 
 # 0.1 Data Description
 
-[superstore.csv](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/superstore.csv)
+[superstore.csv](distributed/superstore.csv)
 
 | Column | Data type | Description |
 | --- | --- | --- |
@@ -45,20 +45,20 @@
 
 ### 0.3 Eco-System Pipline
 
-![▲ 예시](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/Untitled.png)
+![▲ 예시](distributed/Untitled.png)
 
 ▲ 예시
 
 ## 1. Data Collection (희택, 지영)
 
-[superstore_sales.csv](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/superstore_sales.csv)
+[superstore_sales.csv](distributed/superstore_sales.csv)
 
 - SOURCE -
-    
+
     [https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting](https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting)
-    
+
 - **1.1. Load Data To DB, DB To HDFS**
-    
+
     ```sql
     # 미니 프로젝트를 위한 경로 생성
     mkdir ~/mini
@@ -119,61 +119,59 @@
     --table superstore --fields-terminated-by ',' \
     --target-dir /mini/superstore
     ```
-    
+
 - **1.2. Put CSV file(Local) into HDFS**
-    
+
     ```bash
     hdfs dfs -mkdir /mini/original
     hdfs dfs -put ~/mini/superstore_sales.csv /mini/original
     
     hdfs dfs -ls /mini/original
     ```
-    
 
 - **1.3. Create Table using Hive and Load data**
-    
+
     ```sql
     # Hue에서 Create Table
     CREATE TABLE store(
-    	row_id INT,
-    	order_id STRING,
-    	order_date STRING,
-    	ship_date STRING,
-    	ship_mode STRING,
-    	customer_id STRING,
-    	customer_name STRING,
-    	segment STRING,
-    	country STRING,
-    	city STRING,
-    	state STRING,
-    	postal_code FLOAT,
-    	region STRING,
-    	product_id STRING,
-    	category STRING,
-    	sub_category STRING,
-    	product_name STRING,
-    	sales FLOAT
+     row_id INT,
+     order_id STRING,
+     order_date STRING,
+     ship_date STRING,
+     ship_mode STRING,
+     customer_id STRING,
+     customer_name STRING,
+     segment STRING,
+     country STRING,
+     city STRING,
+     state STRING,
+     postal_code FLOAT,
+     region STRING,
+     product_id STRING,
+     category STRING,
+     sub_category STRING,
+     product_name STRING,
+     sales FLOAT
     )
     ROW FORMAT DELIMITED
     FIELDS TERMINATED BY ',';
     
     ```
-    
+
     ```bash
     hdfs dfs -mkdir /mini/store
     hdfs dfs -cp /mini/superstore/part* /mini/store/
     ```
-    
+
     ```sql
     # Load Data
     LOAD DATA INPATH '/mini/store/part*' INTO TABLE store;
     ```
-    
 
 ## 2. Data Preprocessing (형우, 동훈, 지현)
 
 1. Drop or Process NULL value
-    
+
     ```sql
     # centos shell
     hdfs dfs -mkdir /mini/for_preproc
@@ -204,23 +202,23 @@
     );
     
     not_null = FILTER data BY row_id is not NULL 
-    	AND order_id is not NULL 
-    	AND order_date is not NULL
-    	AND ship_date is not NULL 
-    	AND ship_mode is not NULL 
-    	AND customer_id is not NULL
-    	AND customer_name is not NULL 
-    	AND segment is not NULL 
-    	AND country is not NULL
-    	AND city is not NULL 
-    	AND state is not NULL 
-    	AND postal_code is not NULL
-    	AND region is not NULL 
-    	AND product_id is not NULL 
-    	AND category is not NULL
-    	AND sub_category is not NULL 
-    	AND product_name is not NULL 
-    	AND sales is not NULL;
+     AND order_id is not NULL 
+     AND order_date is not NULL
+     AND ship_date is not NULL 
+     AND ship_mode is not NULL 
+     AND customer_id is not NULL
+     AND customer_name is not NULL 
+     AND segment is not NULL 
+     AND country is not NULL
+     AND city is not NULL 
+     AND state is not NULL 
+     AND postal_code is not NULL
+     AND region is not NULL 
+     AND product_id is not NULL 
+     AND category is not NULL
+     AND sub_category is not NULL 
+     AND product_name is not NULL 
+     AND sales is not NULL;
     
     reordered = order not_null by row_id;
     
@@ -235,7 +233,6 @@
     store category_of into '/mini/store_partitioned/office';
     store category_t into '/mini/store_partitioned/technology';
     ```
-    
 
 ## 3. Data Loading (희택, 지영)
 
@@ -245,24 +242,24 @@
 
 ```sql
 CREATE TABLE store_partitioned (
-	row_id INT,
-	order_id STRING,
-	order_date STRING,
-	ship_date STRING,
-	ship_mode STRING,
-	customer_id STRING,
-	customer_name STRING,
-	segment STRING,
-	country STRING,
-	city STRING,
-	state STRING,
-	postal_code FLOAT,
-	region STRING,
-	product_id STRING,
-	category STRING,
-	sub_category STRING,
-	product_name STRING,
-	sales FLOAT
+ row_id INT,
+ order_id STRING,
+ order_date STRING,
+ ship_date STRING,
+ ship_mode STRING,
+ customer_id STRING,
+ customer_name STRING,
+ segment STRING,
+ country STRING,
+ city STRING,
+ state STRING,
+ postal_code FLOAT,
+ region STRING,
+ product_id STRING,
+ category STRING,
+ sub_category STRING,
+ product_name STRING,
+ sales FLOAT
 )
 PARTITIONED BY (category string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
@@ -323,8 +320,8 @@ sqoop export \
 
 Tableau 를 사용한 시각화
 
-![3.PNG](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/3.png)
+![3.PNG](distributed/3.png)
 
-![1.PNG](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/1.png)
+![1.PNG](distributed/1.png)
 
-![9a9b2a9fca1cf8fb8f52cf955ec8c3d1.gif](%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A1%E1%86%AB%20%E1%84%8E%E1%85%A5%E1%84%85%20daed2/9a9b2a9fca1cf8fb8f52cf955ec8c3d1.gif)
+![9a9b2a9fca1cf8fb8f52cf955ec8c3d1.gif](distribute/9a9b2a9fca1cf8fb8f52cf955ec8c3d1.gif)
