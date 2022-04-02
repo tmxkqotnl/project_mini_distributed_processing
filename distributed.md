@@ -324,4 +324,4 @@ Tableau 를 사용한 시각화
 
 ![1.PNG](distributed/1.png)
 
-![choon.gif](distribute/choon.gif)
+![choon.gif](https://user-images.githubusercontent.com/82659201/161370734-8a3e109f-5c95-474a-be20-e61fa1c8cbfb.gif)
